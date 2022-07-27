@@ -19,25 +19,24 @@ iter = 250;
 snsX = X;
 sdX = X;
 
-sdDiv = zeros(loop, 1);
-snsDiv = zeros(loop, 1);
+% sdDiv = zeros(loop, 1);
+% snsDiv = zeros(loop, 1);
 
-for i=1:loop
-%   gradient descent using Sinkhorn divergence as evalution function
-    sdDiv(i) = SinkhornDivergence(sdX, Y, entropy, iter);
-    [~,sdGradX] = SinkhornDivergence(sdX, Y, entropy, iter);
-    sdX = sdX - 0.1 * sdGradX;
-end 
+% for i=1:loop
+% %   gradient descent using Sinkhorn divergence as evalution function
+%     sdDiv(i) = SinkhornDivergence(sdX, Y, entropy, iter);
+%     [~,sdGradX] = SinkhornDivergence(sdX, Y, entropy, iter);
+%     sdX = sdX - 0.1 * sdGradX;
+% end 
 
-for i=1:loop
-    snsDiv(i) = SinkhornDivergence(snsX, Y, entropy, iter);
-    [~,~,snsX] = SubspaceNewtonSinkhorn(snsX, Y, entropy, iter);
-end 
+[steps, finalDiv] = SubspaceNewtonSinkhorn(X,Y, entropy, iter, 0.1, 1);
 
-xIter = 1:loop;
-figure;
-loglog(xIter, snsDiv, '.-', xIter, sdDiv, '.-');
-title('4 Dimension Convergence Comparison')
-legend('Subspace Newtonian','Gradient Descent')
-xlabel('Number of Iterations') 
-ylabel('Sinkhorn Divergence') 
+
+
+% xIter = 1:loop;
+% figure;
+% loglog(xIter, snsDiv, '.-', xIter, sdDiv, '.-');
+% title('4 Dimension Convergence Comparison')
+% legend('Subspace Newtonian','Gradient Descent')
+% xlabel('Number of Iterations') 
+% ylabel('Sinkhorn Divergence') 
