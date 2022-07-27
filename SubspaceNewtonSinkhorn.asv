@@ -1,0 +1,41 @@
+function [gradG, hessianG, xK] = SubspaceNewtonSinkhorn(x, y, alpha, i)
+%UNTITLED Summary of this functioutputArg1 = inputArg1;
+[~, gradF, G1, G2] = SinkhornDivergence(x, y, alpha, i);
+
+g = @(W) SinkhornDivergence(x + W(1) * G1 + W(2) * G2, y, alpha, i);
+
+% generate gradient
+gradG = [sum(gradF(:) .* G1(:)) sum(gradF(:) .* G2(:))];
+
+
+% generate hessian
+initial = zeros(2);
+hessG = ones(2, 2);
+h=1e-3;
+for i=1:2
+    for j=1:2
+        ei = zeros(2);
+        ei(1) = 1;
+        ej = zeros(2);
+        ej(j) = 1;
+
+        g1 = g(initial + h * ei + h * ej);
+        g2 = g(initial + h * ei - h * ej);
+        g3 = g(initial - h * ei + h * ej);
+        g4 = g(initial - h * ei - h * ej);
+        
+        numdiff = (g1 - g2 - g3 + g4)/(4 * h * h);
+        hessG(i,j) = numdiff;
+    end
+end
+
+% calculate inverse matrix
+h
+invHess = (1/((hessG(1,1) * hessG(2,2)) - (hessG(2,1) * hessG(1, 2)))) * [[hessG(2,2), -hessG(1,2)], [-hessG(2,1), hessG(1,1)]];
+invHess
+
+W = -invHess * gradG';
+
+xK = x + W(1) * G1 + W(2) * G2;
+
+end

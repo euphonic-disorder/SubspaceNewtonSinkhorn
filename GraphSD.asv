@@ -1,0 +1,47 @@
+N = 25;
+
+X = randn(N, 2);
+Y = randn(N, 2);
+Y(:, 1) = Y(:, 1) +5;
+entropy = 1;
+
+Cost = pdist2(X, Y, "squaredeuclidean");
+
+[distance, gradX, gradY, Tsink] = SinkhornDistance(X, Y, 0.2, 100);
+
+figure;
+hold on;
+plot(X(:, 1), X(:, 2), 'r.');
+hold on;
+plot(Y(:, 1), Y(:, 2), 'bx')
+
+
+tX = X;
+sdX = X;
+
+% for i=1:500
+% %   gradient descent using Sinkhorn distance as evalution function
+%     [~,gradX,~,~] = SinkhornDistance(tX, Y, 1, 1000);
+%     gX = tX;
+%     tX = tX - 0.1 * gradX;
+%     for j=1:N
+%        hold on;
+%        plot([tX(j,1) gX(j,1) ], [tX(j,2) gX(j,2)],'-', 'color', [1 0 0 1]);
+%         
+%     end
+%     
+% end
+
+for i=1:loop
+%   gradient descent using Sinkhorn divergence as evalution function
+    gX = sdX;
+    [~,sdGradX] = SinkhornDivergence(sdX, Y, entropy, iter);
+    sdX = sdX - 0.1 * sdGradX;
+    for j=1:N
+        hold on;
+        plot([sdX(j,1) gX(j,1)],[sdX(j,2) gX(j,2)],'-x', 'color', [1 0 0 1]);
+        % black
+    end
+end 
+
+legend('Gradient Descent')

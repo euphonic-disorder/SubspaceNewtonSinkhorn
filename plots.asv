@@ -1,0 +1,77 @@
+N = 0;
+
+X = randn(N, 2);
+Y = randn(N, 2);
+Y(:, 1) = Y(:, 1) + 7.3;
+
+[~, order] = sort(X(:,1));
+X = X(order,:);
+
+[~, order] = sort(Y(:, 1));
+Y = Y(order,:);
+
+Cost = pdist2(X, Y, 'squaredeuclidean');
+
+[Tsink] = SinkhornDistance(X, Y, Cost, .2, 200);
+
+[T] = Wasserstein(X, Y, Cost);
+
+[Tsd] = SinkhornDivergence(X, X, Cost, .3, 200);
+
+figure;
+plot(X(:, 1), X(:, 2), 'r.');
+hold on;
+plot(Y(:, 1), Y(:, 2), 'bx')
+axis equal;
+
+for i=1:N
+    for j=1:N
+        if T(i, j) > 1e-6
+            plot([X(i,1) Y(j,1)],[X(i,2) Y(j,2)],'-k');
+        end
+    end
+end
+title('Base OT');
+
+figure;
+hold on;
+for i=1:N
+    for j=1:N
+        plot([X(i,1) Y(j,1)],[X(i,2) Y(j,2)],'-', 'color', [0 0 0 Tsink(i,j) / max(Tsink(:))]);
+    end
+end
+hold on;
+plot(X(:, 1), X(:, 2), 'r.');
+hold on;
+plot(Y(:, 1), Y(:, 2), 'bx')
+axis equal;
+title('Sinkhorn Iterations');
+
+fun = ((Tsd(i,j) + max(Tsd(:) - min(Tsd(:)))) / (2 *(max(Tsd(:)) - min(Tsd(:)))));
+
+figure;
+hold on;
+for i=1:N
+    for j=1:N
+        plot([X(i,1) Y(j,1)],[X(i,2) Y(j,2)],'-', 'color', [0 0 0 1]);
+    end
+end
+hold on;
+plot(X(:, 1), X(:, 2), 'r.');
+hold on;
+plot(Y(:, 1), Y(:, 2), 'bx')
+axis equal;
+title('Sinkhorn Divergence');
+
+figure;
+subplot(2,2,1);
+imagesc(T);
+title('T');
+
+subplot(2,2,2);
+imagesc(Tsink);
+title('Tsinkhorn');
+
+subplot(2,2,3);
+imagesc(Tsd);
+title('Tsd');
