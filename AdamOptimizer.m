@@ -5,7 +5,7 @@ function [steps, finalDiv] = AdamOptimizer(x, y, alpha, beta1, beta2, eps, stop,
     v = zeros(n);
     steps = [];
     [div, grad] = SinkhornDivergence(x, y, alpha, i);
-    k = 0
+    k = 1;
 
     while div > stop
       [div, grad] = SinkhornDivergence(x, y, alpha, i);

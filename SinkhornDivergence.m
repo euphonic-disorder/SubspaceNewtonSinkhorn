@@ -1,4 +1,4 @@
-function [sDiv, sdGradX, G1, G2] = SinkhornDivergence(x, y, alpha, i)
+function [sDiv, sdGradX, G1, G2, v] = SinkhornDivergence(x, y, alpha, i)
 % inputs:
 % x - discrete distribution #1
 % y - discrete distribution #2
@@ -10,7 +10,7 @@ function [sDiv, sdGradX, G1, G2] = SinkhornDivergence(x, y, alpha, i)
 % Tsd - unbiased sinkhorn transportation polytope
 
 % base sinkhorn distance
-[Dist, G1,~, ~] = SinkhornDistance(x, y, alpha, i);
+[Dist, G1,~, ~, v] = SinkhornDistance(x, y, alpha, i);
 
 % regularization terms
 [DistX,G2,~, ~] = SinkhornDistance(x, x, alpha, i);

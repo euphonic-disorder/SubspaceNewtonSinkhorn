@@ -1,4 +1,4 @@
-function [distance, gradX, gradY, Tsinkhorn] = SinkhornDistance(x, y, alpha, i)
+function [distance, gradX, gradY, Tsinkhor, v] = SinkhornDistance(x, y, alpha, i)
 % inputs:
 % x - discrete distribution #1
 % y - discrete distribution #2
@@ -14,7 +14,7 @@ cost = pdist2(x, y, "squaredeuclidean");
 
 % generate kernel
 K = exp(-cost/alpha);
-outputSize = height(x);
+outputSize = numel(x(:,1));
 
 v = ones(outputSize, 1);
 
