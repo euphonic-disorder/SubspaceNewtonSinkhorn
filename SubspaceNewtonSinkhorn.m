@@ -3,7 +3,7 @@ steps = [];
 
 [snsDiv, gradF, G1, G2, v] = SinkhornDivergence(x, y, alpha, i);
 
-g = @(W, GG1, GG2, XX, warmV) WarmSinkhornDistance(XX + W(1) * GG1 + W(2) * GG2, y, alpha, 3, warmV);
+g = @(W, GG1, GG2, XX) SinkhornDivergence(XX + W(1) * GG1 + W(2) * GG2, y, alpha, i);
 
 while snsDiv > stop
 
@@ -28,10 +28,10 @@ while snsDiv > stop
             ej = zeros(2);
             ej(j) = 1;
 
-            g1 = g(initial + h * ei + h * ej, G1, G2, x, v);
-            g2 = g(initial + h * ei - h * ej, G1, G2, x, v);
-            g3 = g(initial - h * ei + h * ej, G1, G2, x, v);
-            g4 = g(initial - h * ei - h * ej, G1, G2, x, v);
+            g1 = g(initial + h * ei + h * ej, G1, G2, x);
+            g2 = g(initial + h * ei - h * ej, G1, G2, x);
+            g3 = g(initial - h * ei + h * ej, G1, G2, x);
+            g4 = g(initial - h * ei - h * ej, G1, G2, x);
             
             numdiff = (g1 - g2 - g3 + g4)/(4 * h * h);
             hessG(i,j) = numdiff;
